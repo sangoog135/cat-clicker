@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">КОТ</string>
+    <string name="title_activity_main">КОТ</string>
+    <string name="package_name">com.sasha.catclicker</string>
+    <string name="custom_url_scheme">com.sasha.catclicker</string>
+</resources>

@@ -1,0 +1,20 @@
+# Зависимости
+node_modules/
+
+# Копия для APK (собирается из исходников)
+www/
+
+# Сборка Android
+android/build/
+android/app/build/
+android/.gradle/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+*.iml
+.idea/
+
+# Система
+.DS_Store

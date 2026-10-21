@@ -1,0 +1,8 @@
+{
+  "appId": "com.sasha.catclicker",
+  "appName": "КОТ",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#83f4eb"
+  }
+}
