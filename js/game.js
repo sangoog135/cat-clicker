@@ -22,8 +22,7 @@ const SPRITES = {
 
 let state = {
   coins: 0,
-  total: 0,
-  cos: { owned: [], worn: [] }   // раздевалка: купленные и надетые предметы
+  total: 0
 };
 
 let memoryOnly = false;
@@ -35,10 +34,6 @@ function load() {
     const data = JSON.parse(raw);
     state.coins = data.coins || 0;
     state.total = data.total || 0;
-    if (data.cos) {
-      state.cos.owned = Array.isArray(data.cos.owned) ? data.cos.owned : [];
-      state.cos.worn = Array.isArray(data.cos.worn) ? data.cos.worn : [];
-    }
   } catch (e) {
     memoryOnly = true;
   }
@@ -295,59 +290,6 @@ function updateUI() {
   if (wrap) wrap.style.transform = 'scale(' + scale + ')';
 }
 
-/* ---------- раздевалка ---------- */
-
-/* Показывает надетые предметы поверх спрайта кота. */
-function renderCos() {
-  WARDROBE.items.forEach((it) => {
-    const img = $('#catCos-' + it.id);
-    if (img) img.hidden = state.cos.worn.indexOf(it.id) < 0;
-  });
-}
-
-/* Кнопки и счётчик в окне события: купить / надеть / снять. */
-function renderEvent() {
-  WARDROBE.items.forEach((it) => {
-    const btn = $('#event-act-' + it.id);
-    if (!btn) return;
-    const owned = state.cos.owned.indexOf(it.id) >= 0;
-    const worn = state.cos.worn.indexOf(it.id) >= 0;
-    btn.classList.remove('gold', 'disabled');
-    if (!owned) {
-      if (state.coins >= WARDROBE.cost) {
-        btn.textContent = t('buy');
-        btn.classList.add('gold');
-      } else {
-        btn.textContent = t('priceLabel');
-        btn.classList.add('disabled');
-      }
-    } else {
-      btn.textContent = worn ? t('undress') : t('wear');
-    }
-  });
-  const purse = $('#event-purse');
-  if (purse) purse.textContent = t('yourPurrs') + ' ' + fmt(state.coins);
-}
-
-/* Купить предмет или переключить «надет/снят». */
-function onCosAction(id) {
-  if (state.cos.owned.indexOf(id) < 0) {
-    if (state.coins < WARDROBE.cost) return;
-    state.coins -= WARDROBE.cost;
-    state.cos.owned.push(id);
-    state.cos.worn.push(id);   // купили — сразу надели
-    if (typeof playSound === 'function') playSound('levelup', 0.6);
-  } else {
-    const wi = state.cos.worn.indexOf(id);
-    if (wi >= 0) state.cos.worn.splice(wi, 1);
-    else state.cos.worn.push(id);
-  }
-  updateUI();
-  renderCos();
-  renderEvent();
-  save();
-}
-
 /* Реакция на смену языка (вызывается из i18n.js) */
 function onLangChanged() {
   if (typeof refreshIntroDialog === 'function') refreshIntroDialog();
@@ -406,7 +348,6 @@ function startGame() {
   if (typeof applyI18n === 'function') applyI18n();
   updateLangButtons();
   updateUI();
-  renderCos();
   cat.addEventListener('click', onCatClick);
   cat.addEventListener('touchstart', onCatClick, { passive: false });
   // Клик в любом месте сцены тоже кормит кота.
@@ -437,26 +378,9 @@ function startGame() {
   });
   // Сброс прогресса
   $('#reset-btn').addEventListener('click', () => {
-    // Одежда куплена за мурлыки — при сбросе счётчика остаётся.
-    state = { coins: 0, total: 0, cos: state.cos };
+    state = { coins: 0, total: 0 };
     updateUI();
-    renderCos();
     save();
-  });
-
-  // Осенний эвент (раздевалка)
-  const eventBtn = $('#event-btn');
-  if (eventBtn) {
-    eventBtn.addEventListener('click', () => {
-      $('#settings-modal').hidden = true;
-      renderEvent();
-      $('#event-modal').hidden = false;
-    });
-  }
-  $('#event-close').addEventListener('click', () => { $('#event-modal').hidden = true; });
-  WARDROBE.items.forEach((it) => {
-    const btn = $('#event-act-' + it.id);
-    if (btn) btn.addEventListener('click', () => onCosAction(it.id));
   });
 
   const introBtn = $('#intro-btn');
