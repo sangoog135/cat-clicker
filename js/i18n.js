@@ -12,6 +12,7 @@ function loadSettings() {
       const data = JSON.parse(raw);
       if (typeof data.name === 'string') s.name = data.name;
       if (data.lang === 'ru' || data.lang === 'en') s.lang = data.lang;
+      if (typeof data.sound === 'boolean') s.sound = data.sound;
     }
   } catch (e) { /* без сохранения — работаем в памяти */ }
   return s;
@@ -61,10 +62,24 @@ function playerName() {
   return settings.name.trim();
 }
 
+/* Звук вкл/выкл. */
+function toggleSound() {
+  settings.sound = !settings.sound;
+  saveSettings();
+  if (typeof onSoundChanged === 'function') onSoundChanged();
+}
+
+/* Включён ли звук. */
+function soundOn() {
+  return !!settings.sound;
+}
+
 window.getSettings = () => Object.assign({}, settings);
 window.setLang = setLang;
 window.setName = setName;
 window.playerName = playerName;
+window.toggleSound = toggleSound;
+window.soundOn = soundOn;
 window.t = t;
 window.applyI18n = applyI18n;
 

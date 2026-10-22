@@ -108,6 +108,7 @@ function showDialog(i) {
   dialog.hidden = false;
   // Кот говорит — радуется, слушает — сидит.
   setIntroSprite(line.who === 'cat' ? INTRO_SPRITES.happy : INTRO_SPRITES.sit);
+  if (typeof playSound === 'function') playSound('blip', 0.5);
 }
 
 function nextDialog() {

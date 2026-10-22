@@ -129,6 +129,14 @@ cd android && ./gradlew assembleDebug
           if not os.path.exists(m): print('НЕТ:', f, '->', m)
   EOF
   ```
+- **Звуки** — `assets/sounds/*.wav` (сгенерированы синтезом, ~70 КБ):
+  `purr` — мурчание на клик, `meow` — «Поймал!», `levelup` — новый уровень,
+  `blip` — переход реплик. Включаются через `js/sound.js` (`playSound(name, vol)`),
+  выключатель «ЗВУК» — в настройках (настройка `sound` в `DEFAULT_SETTINGS`).
+  Файлы wav можно заменить на свои (тот же путь/имя) — перекодировать в mp3 не нужно.
+- **Донат** — `DONATE.url` в `js/data.js` (Donatty). Кнопка «ПОДДЕРЖАТЬ»
+  открывает ссылку через `window.open('_blank')` — в Capacitor WebView это
+  пробрасывается в системный браузер, проверено на эмуляторе.
 - **Движение в сцене знакомства — вручную через `requestAnimationFrame`.**
   Ни CSS-`transition`, ни `element.animate()` в WebView на Android не срабатывали
   надёжно: кот оставался за правым краем экрана и не появлялся

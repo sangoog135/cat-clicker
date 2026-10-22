@@ -25,6 +25,9 @@ const STRINGS = {
     donateBtn: 'ПОДДЕРЖАТЬ',
     settingsTitle: 'НАСТРОЙКИ',
     nameSaved: 'СОХРАНЕНО',
+    sound: 'ЗВУК',
+    on: 'ВКЛ',
+    off: 'ВЫКЛ',
     unlockNote: 'КАТАЛОР ПРИЗОВ ОТКРЫВАЕТСЯ ЗА МУРЛЫКИ',
     tagline: 'САМАЯ СЛОЖНАЯ ИГРА В МИРЕ',
     buy: 'КУПИТЬ',
@@ -53,6 +56,9 @@ const STRINGS = {
     donateBtn: 'SUPPORT',
     settingsTitle: 'SETTINGS',
     nameSaved: 'SAVED',
+    sound: 'SOUND',
+    on: 'ON',
+    off: 'OFF',
     unlockNote: 'PRIZE CATALOG UNLOCKS WITH PURR POINTS',
     tagline: 'THE MOST COMPLEX GAME IN THE WORLD',
     buy: 'BUY',
@@ -64,7 +70,8 @@ const STRINGS = {
 /* Настройки игрока */
 const DEFAULT_SETTINGS = {
   name: '',
-  lang: 'ru'
+  lang: 'ru',
+  sound: true
 };
 
 /* ---------- Игровые параметры ---------- */
@@ -94,7 +101,7 @@ const INTRO = {
       { who: 'cat', text: 'ТЫ МНЕ НРАВИШЬСЯ!' },
       { who: 'cat', text: 'ДАВАЙ ДРУЖИТЬ!' },
       { who: 'cat', text: 'КОРОЧЕ ГОВОРЯ, НА МЕНЯ НАДО КЛИКАТЬ И ДОБЫВАТЬ ОВЧИКИ.' },
-      { who: 'cat', text: 'ПОЛУЧАТЬ КОНЦОВКИ ИХ 10. И ТЫ МНЕ И РАЗРАБОТЧИКУ ЗАДОНАТЬ!' },
+      { who: 'cat', text: 'НА МЕНЯ НАДО КЛИКАТЬ! И ЗАДОНАТЬ!' },
       { who: 'cat', text: 'ПОГНАЛИ!' }
     ],
     en: [
@@ -102,15 +109,15 @@ const INTRO = {
       { who: 'cat', text: 'I LIKE YOU!' },
       { who: 'cat', text: 'LET US BE FRIENDS!' },
       { who: 'cat', text: 'SO, YOU HAVE TO CLICK ME AND GRAB SOME PURRYS.' },
-      { who: 'cat', text: 'GET ALL 10 ENDINGS. AND SUPPORT THE DEV!' },
+      { who: 'cat', text: 'CLICK ON ME! AND SUPPORT THE DEV!' },
       { who: 'cat', text: "LET'S GO!" }
     ]
   }
 };
 
-/* Куда донатить разработчику (ссылка на Boosty/Telegram/Donationalerts). */
+/* Куда донатить разработчику (ссылка Donatty). */
 const DONATE = {
-  url: '',          // вставь ссылку — кнопка «ПОДДЕРЖАТЬ» её откроет
+  url: 'https://streamer.donatty.com/mobile?login-token=FXfwyJrDveWEFHI46E9ILiC0LSzd21',
   dev: 'SASHA'
 };
 

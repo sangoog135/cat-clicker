@@ -155,6 +155,7 @@ function onCatClick(e) {
   if (catState === 'walking') {
     big = true;
     floatUp('ПОЙМАЛ!', true);
+    if (typeof playSound === 'function') playSound('meow', 0.8);
     catState = 'idle';
     catX = 0;
     cat.style.transform = 'translateX(0)';
@@ -171,8 +172,11 @@ function onStageClick(e) {
 
 /* Общая реакция на клик: монеты + кот садится и радуется. */
 function feed(power, big) {
+  const levelBefore = catLevel();
   state.coins += power;
   state.total += power;
+  if (catLevel() > levelBefore && typeof playSound === 'function') playSound('levelup', 0.6);
+  if (typeof playSound === 'function') playSound('purr', 0.7);
   floatUp('+' + fmt(power), big);
 
   // Анимации
@@ -291,6 +295,7 @@ function onLangChanged() {
   if (typeof refreshIntroDialog === 'function') refreshIntroDialog();
   if (typeof applyI18n === 'function') applyI18n();
   updateLangButtons();
+  updateSoundButton();
   updateUI();
 }
 
@@ -306,6 +311,13 @@ function updateLangButtons() {
   const en = $('#lang-en');
   if (ru) ru.classList.toggle('active', lang === 'ru');
   if (en) en.classList.toggle('active', lang === 'en');
+}
+
+/* Надпись на кнопке «ЗВУК»: ВКЛ/ВЫКЛ */
+function updateSoundButton() {
+  const btn = $('#sound-toggle');
+  if (!btn) return;
+  btn.textContent = (typeof soundOn === 'function' && soundOn()) ? t('on') : t('off');
 }
 
 /* ---------- цикл ---------- */
@@ -384,10 +396,18 @@ function startGame() {
     settingsBtn.addEventListener('click', () => {
       $('#name-input').value = (typeof playerName === 'function') ? playerName() : '';
       updateLangButtons();
+      updateSoundButton();
       $('#settings-modal').hidden = false;
     });
   }
   $('#settings-close').addEventListener('click', () => { $('#settings-modal').hidden = true; });
+  const soundBtn = $('#sound-toggle');
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      if (typeof toggleSound === 'function') toggleSound();
+      updateSoundButton();
+    });
+  }
   $('#name-input').addEventListener('change', (e) => {
     if (typeof setName === 'function') setName(e.target.value);
   });
