@@ -173,8 +173,10 @@ function onStageClick(e) {
 /* Общая реакция на клик: монеты + кот садится и радуется. */
 function feed(power, big) {
   const levelBefore = catLevel();
-  state.coins += power;
-  state.total += power;
+  // Случайные х2: пока длится, мурлыков в два раза больше.
+  const mult = x2Until > performance.now() ? BOOM.mult : 1;
+  state.coins += power * mult;
+  state.total += power * mult;
   if (catLevel() > levelBefore && typeof playSound === 'function') playSound('levelup', 0.6);
   if (typeof playSound === 'function') playSound('purr', 0.7);
   floatUp('+' + fmt(power), big);
@@ -228,7 +230,9 @@ function catTick(now, dt) {
       walkDir *= -1;
       turnUntil = now + 350;   // пауза на разворот
     }
-    cat.style.transform = 'translateX(' + catX + 'px)';
+    // Делим на масштаб: сдвиг в CSS-пикселях задан в реальных экранах,
+    // а translateX на коте умножается масштабом родителя (иначе улетает за экран).
+    cat.style.transform = 'translateX(' + (catX / catScale()) + 'px)';
     // Кот идёт по линии травы — точно по холму, а не по воздуху.
     const game = document.querySelector('.game');
     const gRect = game.getBoundingClientRect();
@@ -275,7 +279,8 @@ function catLevel() {
 
 /* Сила клика: каждый уровень добавляет +1 мурлык. */
 function clickPower() {
-  return catLevel();
+  // Максимум 10 мурлыков за клик, даже на большом уровне.
+  return Math.min(catLevel(), CAT.clickMax);
 }
 
 function updateUI() {
@@ -283,11 +288,16 @@ function updateUI() {
   const lv = $('#level');
   if (lv) lv.textContent = catLevel();
   const pw = $('#perClick');
-  if (pw) pw.textContent = fmt(clickPower());
+  if (pw) pw.textContent = fmt(clickPower() * (x2Until > performance.now() ? BOOM.mult : 1));
   // Кот растёт с уровнем (центрирование — через left:50% + margin-left).
-  const scale = Math.min(CAT.levelMaxSize, 1 + (catLevel() - 1) * 0.07);
+  const scale = catScale();
   const wrap = $('#catWrap');
   if (wrap) wrap.style.transform = 'scale(' + scale + ')';
+}
+
+/* Насколько кот вырос на текущем уровне. */
+function catScale() {
+  return Math.min(CAT.levelMaxSize, 1 + (catLevel() - 1) * 0.07);
 }
 
 /* Реакция на смену языка (вызывается из i18n.js) */
@@ -329,7 +339,49 @@ function loop(now) {
   last = now;
   maybeWalk(now);
   catTick(now, dt);
+  dayNightTick(now);
+  boomTick(now);
   requestAnimationFrame(loop);
+}
+
+/* ---------- день и ночь ---------- */
+
+/* Фон меняется каждые 5 минут: день — bg.png, ночь — bg2.png. */
+let isNight = false;
+let phaseUntil = performance.now() + DAYNIGHT.period;
+
+function dayNightTick(now) {
+  if (now < phaseUntil) return;
+  phaseUntil = now + DAYNIGHT.period;
+  isNight = !isNight;
+  const game = $('#game');
+  if (game) game.classList.toggle('night', isNight);
+}
+
+/* ---------- случайные х2 мурлыки ---------- */
+
+/* Раз в 2–4 минуты на минуту включаются двойные мурлыки. */
+let x2Until = 0;
+let nextX2At = performance.now() + BOOM.every + Math.random() * BOOM.every;
+
+function boomTick(now) {
+  if (x2Until <= 0 && now >= nextX2At) {
+    x2Until = now + BOOM.span;
+    updateUI();
+    if (typeof playSound === 'function') playSound('levelup', 0.7);
+  } else if (x2Until > 0 && now >= x2Until) {
+    x2Until = 0;
+    nextX2At = now + BOOM.every + Math.random() * BOOM.every;
+    updateUI();
+  }
+  const badge = $('#x2-badge');
+  if (!badge) return;
+  if (x2Until > 0) {
+    badge.hidden = false;
+    badge.textContent = t('x2') + ' ' + Math.ceil((x2Until - now) / 1000);
+  } else {
+    badge.hidden = true;
+  }
 }
 
 /* ---------- старт ---------- */
