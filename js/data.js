@@ -32,7 +32,15 @@ const STRINGS = {
     tagline: 'САМАЯ СЛОЖНАЯ ИГРА В МИРЕ',
     buy: 'КУПИТЬ',
     owned: 'КУПЛЕНО',
-    locked: 'ЗАКРЫТО'
+    locked: 'ЗАКРЫТО',
+    cosEvent: 'ОСЕННИЙ ЭВЕНТ',
+    wardrobe: 'РАЗДЕВАЛКА',
+    cosCoat: 'ОСЕННИЙ ПЛАЩ',
+    cosBoots: 'ОСЕННИЕ САПОГИ',
+    priceLabel: '10 МИЛЛИОНОВ МУРЛЫКОВ',
+    wear: 'ОДЕТЬ',
+    undress: 'СНЯТЬ',
+    yourPurrs: 'У ТЕБЯ'
   },
   en: {
     coins: 'PURR POINTS',
@@ -63,7 +71,15 @@ const STRINGS = {
     tagline: 'THE MOST COMPLEX GAME IN THE WORLD',
     buy: 'BUY',
     owned: 'OWNED',
-    locked: 'LOCKED'
+    locked: 'LOCKED',
+    cosEvent: 'AUTUMN EVENT',
+    wardrobe: 'WARDROBE',
+    cosCoat: 'AUTUMN COAT',
+    cosBoots: 'AUTUMN BOOTS',
+    priceLabel: '10 MILLION PURRS',
+    wear: 'WEAR',
+    undress: 'REMOVE',
+    yourPurrs: 'YOU HAVE'
   }
 };
 
@@ -127,6 +143,17 @@ const DONATE = {
 const PRIZES = [
   // { id:'...', name:'...', cost:100, icon:'sprites/...' }
 ];
+
+/* ---------- Раздевалка (осенний эвент) ---------- */
+/* Каждому предмету — своя картинка поверх спрайта кота (64x64, те же координаты). */
+
+const WARDROBE = {
+  cost: 10000000,   // мурлыков за предмет осеннего эвента
+  items: [
+    { id: 'coat',  file: 'sprites/cos_coat.png',  name: 'cosCoat' },
+    { id: 'boots', file: 'sprites/cos_boots.png', name: 'cosBoots' }
+  ]
+};
 
 /* ---------- Профиль линии травы на фоне (100x50) ---------- */
 /* Y травы в каждом столбце — кот идёт по холму, а не по воздуху. */
